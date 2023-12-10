@@ -1,6 +1,11 @@
 import 'dotenv/config'
 import app from './app.js';
+import chalk from 'chalk';
+const PORT = 8080;
 
 // Inicia la aplicación
-const PORT = 8080;
-app.listen(PORT, () => console.log('Listen puerto 8080'));
+//**** UP SERVER  */
+app.listen(PORT, () => {
+  console.log(chalk.bgYellowBright.black.bold(`SERVER UP PORT: ${PORT}`));
+});
+

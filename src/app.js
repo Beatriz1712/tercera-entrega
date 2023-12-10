@@ -13,6 +13,8 @@ import productsRouter from './router/product.routes.js';
 import userRouter from './router/user.routes.js';
 import messagesRouter from "./router/messages.routes.js"
 import Chance from 'chance';
+import mongoose from 'mongoose';
+
 //para aumentar los listeners
 import EventEmitter from "events";
 EventEmitter.defaultMaxListeners = 15;

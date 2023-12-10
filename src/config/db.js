@@ -1,15 +1,22 @@
 import mongoose from 'mongoose';
+import chalk from'chalk';
 const uri =
 
 "mongodb+srv://beatriz1712sc:soynuevabasededatos@cluster0.2gm0bzy.mongodb.net/test ";
 function connectDB() {
   mongoose
     .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("Conexión exitosa a la base de datos"))
+    .then(() => console.log("\u001b[1;36m Connection successful Database "))
     .catch((error) =>
-      console.error("Error al conectar a la base de datos:", error)
+      console.error("\u001b[1;31m Connection failed " + error, error)
     );
 }
+
+
+
+
+
+
 
 /*
 const connectDB = async () => {

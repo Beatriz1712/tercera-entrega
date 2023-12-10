@@ -31,7 +31,7 @@ A continuación, se muestran las dependencias utilizadas en este proyecto:
 1. Buscar en el directorio del proyecto.
 
 ```shell
-src/index.js
+src/app.js
 ```
 2. Instalar las dependencias para el servidor.
 ```shell
@@ -48,18 +48,15 @@ Se levanta el servidor con *Express js* en el puerto:
 
 Para iniciar la aplicación, ejecuta el siguiente comando:
 ```shell
-nodemon index.js
+nodemon app.js
 npm run dev
 ```
-#### `http://localhost:8080/inicio`
+#### `http://localhost:8080/`
 Para entrar a la app
 
 
 
-Falta revisar 
-```
-tailwind
-```
+
 
 
 
