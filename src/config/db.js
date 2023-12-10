@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import chalk from'chalk';
+mongoose.set("strictQuery", false);
+
 const uri =
 
 "mongodb+srv://beatriz1712sc:soynuevabasededatos@cluster0.2gm0bzy.mongodb.net/test ";

@@ -79,6 +79,8 @@ app.get('/mockingproducts', (req, res) => {
 
 //Css static
 app.use("/", express.static(__dirname + "/public"))
+/******* */
+//app.use(express.static("public"));
 
 //URLs al Front
 app.use('/', viewsRouter);

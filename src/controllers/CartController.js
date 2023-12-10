@@ -9,11 +9,12 @@ const userDao = new UserDao()
 
 class CartController{
 
-//INCOMPLETOOOOruta para sacar el id del carrito del usuario para usar con el boton micarrito INCOMPLETOOOO
+//INCOMPLETOOOOruta para sacar el id del carrito del usuario 
+//para usar con el boton micarrito INCOMPLETOOOO
 async getUserCart(req, res) {
     console.log("paso1funcion");
     try {
-        console.log("FUNCA");
+        console.log("bien");
         // Obtener el correo electrónico del usuario desde req.user
         const userEmail = req.user.email;
         console.log(userEmail);
@@ -50,7 +51,7 @@ async getUserCart(req, res) {
 
 // funcion para obtener todos los carritos
 async getAllCarts(req, res) {
-    // try catch pa manejo de errores
+    
     try {
         // se guarda en la constante de nombre carts todos los carritos de la base de datos con la funcion getallcarts
         const carts = await cartDao.getAllCarts(); 
