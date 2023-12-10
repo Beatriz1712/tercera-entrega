@@ -1,86 +1,113 @@
-import express from "express";
-import passport from "passport";
-import { registerUser, loginUser, logoutUser, handleGitHubCallback } from "../controllers/users.controller.js"
+import { Router } from 'express';
+import passport from 'passport';
+import * as userController from '../controllers/UserController.js';
 
-const UserRouter = express.Router()
+const router = Router()
 
-UserRouter.post("/register",
-    passport.authenticate("register",
-        { failureRedirect: "/failregister" }), registerUser
-)
 
-UserRouter.get("/failregister", async (req, res) => {
-    console.log("Failed Strategy")
-    res.send({ error: "Failed" })
-})
-
-UserRouter.post("/login",
-    passport.authenticate("login",
-        { failureRedirect: "/faillogin" }), loginUser
-)
-
-UserRouter.get("/faillogin", async (req, res) => {
-    res.send({ error: "Failed Login" })
-})
-
-UserRouter.get("/logout", logoutUser)
-
-UserRouter.get("/github", passport.authenticate("github", { scope: ["user: email"] }), async (req, res) => {
-    console.log("Redirecting to GitHub for authentication...")
-})
-
-UserRouter.get("/github/callback", passport.authenticate("github", { failureRedirect: "/login" }), handleGitHubCallback);
-
-UserRouter.get("/profile", async (req, res) => {
-    try {
-        let user = req.session.user
-
-        if (!user || !user.email) {
-            res.redirect("/login")
-        }
-        const userData = {
-            email: user.email,
-            role: user.role,
-        }
-
-        res.render("profile", {
-            title: "Perfil de Usuario",
-            user: userData
-        })
+router.post('/register', passport.authenticate('register', { failureRedirect: '/failregister' }), (req, res) => {
+  try 
+    {
+        const { first_name, last_name, email, age, password, rol }= req.body
+        if (!first_name || !last_name || !email || !age)  return res.status(400).send({ status: 400, error: 'Faltan datos' })
+        res.redirect("/login")
+    } catch (error) 
+    {
+        res.status(500).send("Error al acceder al registrar: " + error.message);
     }
-    catch (error) {
-        console.error("Error en la ruta /profile:", error);
-        res.status(500).json(error);
-    }
+});
+
+router.get("/failregister",async(req,res)=>{
+    console.log("Fallo el registro")
+    res.send({error: "Failed"})
 })
 
-UserRouter.get("/current", async (req, res) => {
-    try {
-        let user = req.session.user
 
-        if (!user) {
-            res.redirect("/login")
-        }
-        const userData = {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            age: user.age,
-            email: user.email,
-            role: user.role
-        }
 
-        res.render("current", {
-            title: "Perfil de Usuario",
-            user: userData
-        })
+router.post("/login", passport.authenticate("login", {failureRedirect:"/faillogin"}),async (req, res) => {
+    try 
+    {
+        if(!req.user) return res.status(400).send({status:"error", error: "Credenciales invalidas"})
+
+            if(req.user.rol === 'admin'){
+            req.session.emailUsuario = req.user.email
+            req.session.nomUsuario = req.user.first_name
+            req.session.apeUsuario = req.user.last_name
+            req.session.rolUsuario = req.user.rol
+            res.redirect("/profile")
+        }
+        else{
+            req.session.emailUsuario = req.user.email
+            req.session.rolUsuario = req.user.rol
+            res.redirect("/products")
+        }
+        
+        }
+        catch (error) 
+    {
+        res.status(500).send("Error al acceder al perfil: " + error.message);
     }
-    catch (error) {
-        console.error("Error en la ruta /current:", error);
-        res.status(500).json(error);
-    }
+}) 
+
+
+router.get("/faillogin",async(req,res)=>{
+    res.send({error: "Failed Login"})
 })
 
-export default UserRouter;
+
+router.get("/logout", async (req, res) => {
+    req.session.destroy((error) =>{
+        if(error)
+        {
+            return res.json({ status: 'Logout Error', body: error})
+        }
+        res.redirect('/login')
+    })    
+})
 
 
+//------------------------------ GITHUB
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {});
 
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
+  req.session.user = req.user;
+  res.redirect('/profile');
+});
+
+router.get('/login', async (req, res) => {
+  res.render('login', {
+    title: 'Vista Login',
+  });
+});
+//------------------------------------------
+
+router.get('/current', async (req, res, next) => {
+  try {
+    if (!req.session.emailUsuario) {
+      return res.redirect('/login');
+    }
+
+    const { rol } = req.session;
+
+    // Verificar permisos para las operaciones de administrador
+    if (req.originalUrl.startsWith('/admin') && rol !== 'admin') {
+      return res.status(403).send('No tienes permisos para acceder a esta ruta');
+    }
+
+    // Verificar permisos para las operaciones de usuario
+    if (req.originalUrl.startsWith('/user') && rol !== 'user') {
+      return res.status(403).send('No tienes permisos para acceder a esta ruta');
+    }
+
+    // Continuar con la operación si la autorización es exitosa
+    next();
+  } catch (error) {
+    res.status(500).send({ status: 'error', error: 'Error en la autorización' });
+  }
+});
+
+
+router.get('/users', userController.getUsers);
+router.get('/users/:uid', userController.getUserById);
+
+export default router;

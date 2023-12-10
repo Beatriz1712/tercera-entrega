@@ -1,11 +1,22 @@
-<div class="divproducto">
+<img src="https://src/public/files/shoppingCart.jpg" style="max-height: 200px;">
 
-  <h1>Perfil de {{user.role}}</h1><h3><a href="/api/users/logout">Cerrar sesión</a></h3>
-  <p>Email: {{user.email}}</p>
+<div className="descproducto">
+
+<h1>Perfil de Usuario</h1><h3><a href="/api/user/logout">Cerrar sesión</a></h3>
+<p>Nombre: {{first_name}}{{last_name}}</p>
+<p>Email: {{email}}</p>
+<p>Rol: {{rol}}</p>
+
+
+<!-- Mostrar enlace solo si el usuario es administrador -->
+  {{#if isAdmin}}
+    <a href="/addProduct"><h2>Cargar un nuevo producto</h2></a>
+  {{/if}}
 
 </div>
 
-<a href="/inicio"><h2>Volver al inicio</h2></a>
+<a href="/"><h2>Volver al inicio</h2></a>
 <a href="/products"><h2>Ir a todos los productos</h2></a>
+<a href="/chat"><h2>Ir al chat</h2></a>
 
-<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css">

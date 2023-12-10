@@ -1,5 +1,6 @@
 import 'dotenv/config'
-import app from './app.js'
+import app from './app.js';
 
-const PORT = 8080
-app.listen(PORT, () => console.log('Listen on porto 8080'))
+// Inicia la aplicación
+const PORT = 8080;
+app.listen(PORT, () => console.log('Listen puerto 8080'));

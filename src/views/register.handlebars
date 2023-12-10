@@ -1,24 +1,33 @@
-<div class="divProducto">
+<img src="https://src/public/files/shoppingCart.jpg" style="max-height: 200px;">
+<div className="descproducto">
 
-  <form method="POST" action="/api/users/register">
-    <label for="first_name">Nombre</label>
-    <input type="text" name="first_name" />
+<form method="POST" action="/api/user/register">
+    <label for="first_name">First name</label>
+    <input type="text" name="first_name">
 
-    <label for="last_name">Apellido</label>
-    <input type="text" name="last_name" />
+    <label for="last_name">Last name</label>
+    <input type="text" name="last_name">
 
     <label for="email">Email</label>
-    <input type="email" name="email" />
+    <input type="email" name="email">
+
+    <label for="age">Age</label>
+    <input type="number" name="age">
 
     <label for="password">Password</label>
-    <input type="password" name="password" />
+    <input type="password" name="password">
 
-    <label for="role">Role</label>
-    <input type="text" name="role" />
+    <label for="rol">Rol</label>
+    <select name="rol">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+    </select>
 
-    <button type="submit">Registrarse</button>
-  </form>
+    <button type="submit">Register</button>
+</form>
 
 </div>
 
-<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<a href="/"><h2>Volver al inicio</h2></a>
+
+<link rel="stylesheet" type="text/css" href="/css/style.css">

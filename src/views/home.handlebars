@@ -1,20 +1,28 @@
-<h1>Lista de productos</h1>
-<h2>Bienvenido {{user.email}}</h2>
-<p>Rol: {{user.role}}</p>
-<p>Nombre: {{user.first_name}}</p>
-<p>Apellido: {{user.last_name}}</p>
-{{#each products}}
-  <div class="divProducto">
-    <h2>{{this.name}}</h2>
-    <p>{{this._id}}</p>
-    <p> {{this.description}} </p>
-    <p> {{this.price}} </p>
-    <p> {{this.category}} </p>
-    <p> {{this.stock}} </p>
-    <img src={{this.thumbnail}} alt="" />
-    <button class="btn-addCart" data-product-id="{{this._id}}">Agregar al carrito</button>
-    <a href="/product/{{this._id}}">Ver detalles</a>
-  </div>
-{{/each}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Producto</title>
+     <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <img src="https://src/public/files/shoppingCart.jpg" style="height: 200px;">
 
-<link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <h1>BIENVENIDO A ECOMMERCE APP</h1>
+    <h3>VISITA NUESTRAS SECCIONES</h3>
+    
+    <ul>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/products">Productos</a></li>
+        <li><a href="/chat">Chat</a></li>
+        <li><a href="/profile">Ir a tu perfil de usuario</a></li>
+        <li><a href="/mockingproducts">Ir a Mocking de Productos ficticios</a></li>
+    </ul>
+    
+
+<script src="/js/chat.js"></script>
+</body>
+</html>
+
