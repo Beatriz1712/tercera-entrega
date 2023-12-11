@@ -1,6 +1,4 @@
-# Backend / Ecommerce
-
-
+#  Ecommerce App  / Backend
 
 ### ☑️ Dependencias:
 
@@ -21,17 +19,16 @@ A continuación, se muestran las dependencias utilizadas en este proyecto:
     "passport-github2": "^0.1.12",
     "passport-local": "^1.0.0",
     "session-file-store": "^1.5.0",
-    "sweetalert2": "^11.7.32"
+    
 ```
 
 
 ### 💻 Instalación:
 
 
-1. Buscar en el directorio del proyecto.
-
+1. Se inicia el proyecto.
 ```shell
-src/app.js
+src/index.js
 ```
 2. Instalar las dependencias para el servidor.
 ```shell
@@ -48,8 +45,7 @@ Se levanta el servidor con *Express js* en el puerto:
 
 Para iniciar la aplicación, ejecuta el siguiente comando:
 ```shell
-nodemon app.js
-npm run dev
+npm start
 ```
 #### `http://localhost:8080/`
 Para entrar a la app
