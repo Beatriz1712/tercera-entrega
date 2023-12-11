@@ -9,7 +9,7 @@ router.post('/register', passport.authenticate('register', { failureRedirect: '/
   try 
     {
         const { first_name, last_name, email, age, password, rol }= req.body
-        if (!first_name || !last_name || !email || !age)  return res.status(400).send({ status: 400, error: 'Faltan datos' })
+        if (!first_name || !last_name || !email )  return res.status(400).send({ status: 400, error: 'Faltan datos' })
         res.redirect("/login")
     } catch (error) 
     {
@@ -24,11 +24,12 @@ router.get("/failregister",async(req,res)=>{
 
 
 
-router.post("/login", passport.authenticate("login", {failureRedirect:"/faillogin"}),async (req, res) => {
+router.post("/login", passport.authenticate("login",
+ {failureRedirect:"/register"}),async (req, res) => {
     try 
     {
         if(!req.user) return res.status(400).send({status:"error", error: "Credenciales invalidas"})
-
+         
             if(req.user.rol === 'admin'){
             req.session.emailUsuario = req.user.email
             req.session.nomUsuario = req.user.first_name
@@ -48,11 +49,15 @@ router.post("/login", passport.authenticate("login", {failureRedirect:"/faillogi
         res.status(500).send("Error al acceder al perfil: " + error.message);
     }
 }) 
+//cambie el fail login por register
+router.get("/register",async(req,res)=>{
+    //res.send({error: "Failed Login" })
+    res.render('register',{
+      title: 'vista register'
+    });  
+}
 
-
-router.get("/faillogin",async(req,res)=>{
-    res.send({error: "Failed Login"})
-})
+)
 
 
 router.get("/logout", async (req, res) => {

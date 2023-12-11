@@ -24,7 +24,6 @@ const initializePassword = () => {
                     return done(null, false, { message: 'El usuario ya existe' });
                 }
 
-
                 const hashedPassword = await createHash(password);
       
             const newUser = {
@@ -67,20 +66,18 @@ const initializePassword = () => {
 
     passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
         try {
+            console.log("Inicio de sesion para :", username);
             const user = await usersModel.findOne({ email: username });
-    
             if (!user) {
                 return done(null, false, { message: 'Usuario no encontrado' });
             }
-    
             const isValid = await isValidPassword(password, user.password);
-    
             if (!isValid) {
                 return done(null, false, { message: 'Contraseña incorrecta' });
             }
-    
             return done(null, user);
         } catch (error) {
+            console.log("error en estrategia de login", error);
             return done(error);
         }
     }));

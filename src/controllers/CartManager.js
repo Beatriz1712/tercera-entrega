@@ -179,12 +179,8 @@ class CartManager {
                 console.error('Error al eliminar productos del carrito:', error);
                 return 'Error al eliminar productos del carrito';
             }
-        }
-        
-        
-          
+        }        
 }
-
 
 
 export default CartManager

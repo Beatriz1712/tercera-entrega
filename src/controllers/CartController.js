@@ -9,7 +9,7 @@ const userDao = new UserDao()
 
 class CartController{
 
-//INCOMPLETOOOOruta para sacar el id del carrito del usuario 
+//INCOMPLETOOOOruta para tener el id del carrito del usuario 
 //para usar con el boton micarrito INCOMPLETOOOO
 async getUserCart(req, res) {
     console.log("paso1funcion");
@@ -121,7 +121,7 @@ async addProductToCart(req, res) {
         return res.json(result);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ status: "error", error: "tenemos un 33-12" });
+        return res.status(500).json({ status: "error", error: "error" });
     }
 }
 
@@ -135,7 +135,7 @@ async updateProductQuantity(req, res) {
         return res.json(result);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ status: "error", error: "tenemos un 33-12" });
+        return res.status(500).json({ status: "error", error: "error" });
     }
 }
 
@@ -176,7 +176,7 @@ async deleteProductFromCart(req, res) {
     }
 }
 
-// funcion para generar un codigo aleatorio
+// funcion para generar un codigo aleatorio-ojo
 async generateUniqueCode() {
     return uuidv4();
 }
