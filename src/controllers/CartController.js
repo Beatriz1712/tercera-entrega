@@ -106,10 +106,10 @@ async addProductsToCart(req, res) {
         // Llama a la función de DAO para agregar productos al carrito
         const result = await cartDao.addProductsToCart(cartId, products);
         return res.json(result);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ status: "error", error: error.message });
-    }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ status: "error", error: error.message });
+        }
 }
 
 async addProductToCart(req, res) {

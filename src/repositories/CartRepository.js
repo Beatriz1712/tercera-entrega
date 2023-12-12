@@ -77,6 +77,7 @@ class CartRepository {
 }
 
   // Agregar un producto al carrito del usuario
+  /*
   async addProductToUserCart(userId, productId, quantity) {
     try {
       const userCart = await cartsModel.findOneAndUpdate(
@@ -102,5 +103,26 @@ class CartRepository {
   
 
 }
+*/
+async addProductToUserCart(userId, productId, quantity) {
+  try {
+    const userCart = await cartsModel.findOneAndUpdate(
+      { userId: userId }, // Encuentra el carrito del usuario por su ID
+      {
+        $push: {
+          products: {
+            productId: productId,
+            quantity: quantity
+          }
+        }
+      },
+      { upsert: true, new: true } // Crea un carrito si no existe
+    );
 
+    return userCart;
+  } catch (error) {
+    throw new Error('Error al agregar el producto al carrito del usuario');
+  }
+}
+}
 export default CartRepository;

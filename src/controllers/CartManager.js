@@ -1,5 +1,5 @@
 import { cartsModel } from "../DAO/models/carts.model.js";
-
+import mongoose from "mongoose";
 
 class CartManager {
     
@@ -81,20 +81,30 @@ class CartManager {
 
 
       async getCartWithProducts(cartId) 
-      {
-        try
-        {
-          const cart = await cartsModel.findById(cartId).populate('products.productId').lean();
-          if (!cart) {
-            return 'Carrito no encontrado';
-          }
-      
-          return cart;
-        } catch (error) {
-          console.error('Error al obtener el carrito con productos:', error);
-          return 'Error al obtener el carrito con productos';
-        }}
+       {
+  const isValidObjectId = /^[0-9a-fA-F]{24}$/;
 
+  if (!isValidObjectId.test(cartId)) {
+    throw new Error("El cartId no es válido");
+  }
+
+  try {
+    const convertedCartId = new mongoose.Types.ObjectId(cartId);
+    const cart = await cartsModel.findById(convertedCartId).populate('products.productId').lean();
+    
+    if (!cart) {
+      return 'Carrito no encontrado';
+    }
+    
+    return cart;
+  } catch (error) {
+    console.error('Error al obtener el carrito con productos:', error);
+    return 'Error al obtener el carrito con productos';
+  }
+}
+
+         
+        
 
         async updateProductInCart(cartId, prodId, updatedProduct) 
         {

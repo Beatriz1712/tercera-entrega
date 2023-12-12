@@ -60,8 +60,6 @@ router.delete("/:id", async (req, res) => {
   });
 
 
-
-
 // PRODUCTOS DENTRO DE CARRITO
 // Verificar si un producto está en el carrito
 router.get("/:cid/products/:pid", async (req, res) => {
@@ -78,7 +76,7 @@ router.get("/:cid/products/:pid", async (req, res) => {
     }
   });
   
-// Agregar productos a un carrito -- :cid es el id del carrito y :pid es el id del producto
+// Agregar productos a un carrito -- :cid  id del carrito y :pid  id del producto
 router.post("/:cid/products/:pid", async (req, res) => {
     let cartId = req.params.cid;
     let prodId = req.params.pid;

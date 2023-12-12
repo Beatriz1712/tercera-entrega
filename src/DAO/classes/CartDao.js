@@ -72,10 +72,10 @@ class CartDao {
   async getCartProducts(cartId) {
     try {
         const cart = await cartsModel.findById(cartId);
-        const productIds = cart.products.map(product => product.product);
+        const productIds = cart.products.map(product => product.productId);
 
         // Obtener información completa de los productos a partir de los IDs
-        const products = await productModel.find({ _id: { $in: productIds } });
+        const products = await productsModel.find({ _id: { $in: productIds } });
 
         // Ahora tienes toda la información de los productos
         return products;
