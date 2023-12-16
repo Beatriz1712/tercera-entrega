@@ -14,6 +14,7 @@ export const isAdmin = (req, res, next) => {
 // Middleware para verificar si el usuario está autenticado
 export const isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
+        console.log(req.user)
         next();
     } else {
         res.status(401).json({ error: 'Acceso no autorizado. Debes iniciar sesión.' });

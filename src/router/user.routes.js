@@ -40,6 +40,8 @@ router.post("/login", passport.authenticate("login",
         else{
             req.session.emailUsuario = req.user.email
             req.session.rolUsuario = req.user.rol
+            req.session.idusuario = req.user.id
+            console.log(req.session.idusuario)
             res.redirect("/products")
         }
         

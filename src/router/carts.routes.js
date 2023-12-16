@@ -78,6 +78,7 @@ router.get("/:cid/products/:pid", async (req, res) => {
   
 // Agregar productos a un carrito -- :cid  id del carrito y :pid  id del producto
 router.post("/:cid/products/:pid", async (req, res) => {
+    console.log(req.params)
     let cartId = req.params.cid;
     let prodId = req.params.pid;
     let { product_id, quantity } = req.body; 
@@ -109,12 +110,12 @@ router.put("/:cid/products/:pid", async (req, res) => {
 });
 
 // Eliminar productos de un carrito
-router.delete("/:cid/products/:pid", async (req, res) => {
-    let cartId = req.params.cid;
-    let prodId = req.params.pid;
 
+router.delete("/cart/products/:cid/:pid", async (req, res) => {
+    let cartId = req.params.cid; // 
+    let productId = req.params.pid; // 
     try {
-        const result = await cartManager.removeProductFromCart(cartId, prodId);
+        const result = await cartManager.removeProductFromCart(cartId, productId);
 
         res.send({ result: "success", payload: result });
     } catch (error) {
@@ -129,7 +130,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
 //Traemos todos los carritos con http://localhost:8080/api/carts con get
 router.get("/population/:cid", async (req,res)=>{
     let cartId = req.params.cid
-    res.send(await cartManager.getCartWithProducts(cartId))
+    res.send(await cartManager.getCartWithProducts(cartId))  
 })
 
 
@@ -150,23 +151,24 @@ router.post("/create-cart", isAuthenticated, async (req, res) => {
 });
 
 
-router.post("/add-to-cart/:productId", isAuthenticated, async (req, res) => {
+router.post("/add-to-cart/:productId", async (req, res) => { 
   try {
-    const userId = req.user._id; // Obtener el ID del usuario logueado desde la sesión
-    const productId = req.params.productId; // Obtener el ID del producto a agregar
+    console.log(req.body)
+    console.log(req.user._id)
+    const userId = req.user._id; // Asegúrate de que el usuario esté autenticado para tener este valor
+    const productId = req.params.productId;
+    const { quantity } = req.body; 
 
-    // Asumiendo que la cantidad del producto a agregar viene en el body de la solicitud
-    const { quantity } = req.body;
-
-    // Lógica para agregar el producto al carrito del usuario
-    const result = await cartRepository.addProductToUserCart(userId, productId, quantity);
-
-    res.status(200).json({ status: "success", message: "Producto agregado al carrito", cart: result });
+    // Llamada al método del repositorio para agregar el producto al carrito
+    const cart = await cartRepository.addProductToUserCart(userId, productId, quantity);
+    console.log(cart)
+    res.redirect("/cart"); 
   } catch (error) {
     console.error("Error al agregar el producto al carrito:", error);
     res.status(500).json({ status: "error", message: "Error al agregar el producto al carrito" });
   }
 });
+
 
 router.delete("/api/deleteproductcarts/:cid", cartController.deleteAllProductsInCart); // borrar todos los productos del un carrito
 

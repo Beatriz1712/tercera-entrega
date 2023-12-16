@@ -6,7 +6,9 @@ const uri ="mongodb+srv://beatriz1712sc:soynuevabasededatos@cluster0.2gm0bzy.mon
 function connectDB() {
   mongoose
     .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("\u001b[1;36m Connection successful Database "))
+    .then(() =>
+      console.log("\u001b[1;35mConnection successful Database")              
+    )
     .catch((error) =>
       console.error("\u001b[1;31m Connection failed " + error, error)
     );
@@ -18,17 +20,7 @@ function connectDB() {
 
 
 
-/*
-const connectDB = async () => {
- 
-  mongoose
-    .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("Conexión exitosa a la base de datos"))
-    .catch((error) =>
-      console.error("Error al conectar a la base de datos:", error)
-    );
-};
-*/
+
 
 
 export default connectDB;

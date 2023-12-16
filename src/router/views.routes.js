@@ -1,13 +1,13 @@
 import { Router } from "express";
 const router = Router()
-
+import CartRepository from "../repositories/CartRepository.js";
 import ProductManager from "../controllers/ProductManager.js"
 import CartManager from "../controllers/CartManager.js"
 import { isAdmin } from "../config/middlewares.js";
 
 const product = new ProductManager
 const cart = new CartManager
-
+const repocart = new CartRepository
 //Pagina inicial
 router.get("/", (req, res)=> {
     res.render("home", {
@@ -34,7 +34,9 @@ router.get("/chat", isAuthenticated, (req, res) => {
 
 //Renderizado de productos
 router.get("/products", async (req, res) => {
+    
     let allProducts = await product.getProducts()
+    console.log(allProducts)
     allProducts = allProducts.map(product => product.toJSON())
     res.render("productos", {
         title: "Ecommerce App | Productos",
@@ -76,13 +78,27 @@ router.get("/products/:id", async (req, res) => {
 });
 
 //renderizado de productos en carrito
-router.get("/cart/:cid", async (req, res) => {
-    let id = req.params.cid;
-    let cartWithProducts = await cart.getCartWithProducts(id);
-    res.render("cart", {
-        title: "Vista Carro",
-        products: cartWithProducts.products, 
-    });
+router.get("/cart", async (req, res) => {
+    if (!req.user || !req.user._id) {
+        // Manejar el caso en que el usuario no esté autenticado
+        return res.redirect("/login"); // Redirigir a la página de inicio de sesión, por ejemplo
+    }
+    try {
+        //console.log(req.user._id)  
+        const userId = req.user._id;
+        //console.log(userId)
+        let userCart = await repocart.getCartById(userId); 
+        
+        console.log(userCart)     // Función para obtener el carrito del usuario
+
+        res.render("cart", {
+            title: "Vista Carro",
+            cart: userCart // Pasar el carrito específico del usuario a la plantilla
+        });
+    } catch (error) {
+        console.error("Error al obtener el carrito:", error);
+        // Manejar el error, por ejemplo, mostrando un mensaje de error
+    }
 });
 
 //Login

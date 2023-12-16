@@ -48,13 +48,18 @@ app.use("/api/prod", productsRouter)
 app.use("/api/user", userRouter)
 app.use("/api/msg", messagesRouter)
 //handlebars
-app.engine("handlebars", engine())
+app.engine("handlebars", engine({
+  runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true,
+  }
+}));
 app.set("view engine", "handlebars")
 app.set("views", path.resolve(__dirname + "/views"))
-app.set("views", __dirname+"/views")
+/******* */
 
 
-
+/*** */
 const chance = new Chance()
 //Mocking con 100 productos
 app.get('/mockingproducts', (req, res) => {
@@ -82,7 +87,7 @@ app.use("/", express.static(__dirname + "/public"))
 /******* */
 //app.use(express.static("public"));
 
-//URLs al Front
+//URLs al Front  
 app.use('/', viewsRouter);
 
 

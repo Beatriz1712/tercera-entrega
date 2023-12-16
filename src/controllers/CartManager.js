@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 
 class CartManager {
     
-
   async getAllCarts() {
     try {
       const carts = await cartsModel.find({});
@@ -80,16 +79,16 @@ class CartManager {
 
 
 
-      async getCartWithProducts(cartId) 
+async getCartWithProducts(userId) 
        {
   const isValidObjectId = /^[0-9a-fA-F]{24}$/;
 
-  if (!isValidObjectId.test(cartId)) {
+  if (!isValidObjectId.test(userId)) {
     throw new Error("El cartId no es válido");
   }
 
   try {
-    const convertedCartId = new mongoose.Types.ObjectId(cartId);
+    const convertedCartId = new mongoose.Types.ObjectId(userId);
     const cart = await cartsModel.findById(convertedCartId).populate('products.productId').lean();
     
     if (!cart) {
@@ -103,8 +102,7 @@ class CartManager {
   }
 }
 
-         
-        
+    
 
         async updateProductInCart(cartId, prodId, updatedProduct) 
         {
