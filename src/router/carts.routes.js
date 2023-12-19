@@ -111,17 +111,22 @@ router.put("/:cid/products/:pid", async (req, res) => {
 
 // Eliminar productos de un carrito
 
-router.delete("/cart/products/:cid/:pid", async (req, res) => {
-    let cartId = req.params.cid; // 
-    let productId = req.params.pid; // 
-    try {
-        const result = await cartManager.removeProductFromCart(cartId, productId);
+router.delete("/cart/:cid/products/:pid", async (req, res) => {
+  let cartId = req.params.cid; //
+  let productId = req.params.pid; //
+  try {
+    const result = await cartManager.removeProductFromCart(cartId, productId);
 
-        res.send({ result: "success", payload: result });
-    } catch (error) {
-        console.error("Error al eliminar productos del carrito:", error);
-        res.status(500).send({ status: "error", error: "Error al eliminar productos del carrito" });
-    }
+    res.send({ result: "success", payload: result });
+  } catch (error) {
+    console.error("Error al eliminar productos del carrito:", error);
+    res
+      .status(500)
+      .send({
+        status: "error",
+        error: "Error al eliminar productos del carrito",
+      });
+  }
 });
 
 

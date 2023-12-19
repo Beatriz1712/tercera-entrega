@@ -11,171 +11,188 @@ class CartController{
 
 //INCOMPLETOOOOruta para tener el id del carrito del usuario 
 //para usar con el boton micarrito INCOMPLETOOOO
-async getUserCart(req, res) {
-    console.log("paso1funcion");
-    try {
-        console.log("bien");
-        // Obtener el correo electrónico del usuario desde req.user
-        const userEmail = req.user.email;
-        console.log(userEmail);
+    async getUserCart(req, res) {
+        console.log("paso1funcion");
+        try {
+            console.log("bien");
+            // Obtener el correo electrónico del usuario desde req.user
+            const userEmail = req.user.email;
+            console.log(userEmail);
 
-        // Resto del código para obtener el carrito...
-        // Buscar al usuario en la base de datos usando el correo electrónico
-        const user = await userDao.getUserByEmail(userEmail);
+            // Resto del código para obtener el carrito...
+            // Buscar al usuario en la base de datos usando el correo electrónico
+            const user = await userDao.getUserByEmail(userEmail);
 
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+            if (!user) {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+
+            // Obtener el ID del carrito del usuario encontrado
+            const cartId = user.carrito;
+            console.log("Valor de user.carrito:", user.carrito);
+            if (!mongoose.Types.ObjectId.isValid(cartId)) {
+                return res.status(400).json({ message: 'ID de carrito no válido' });
+            }
+
+            // Buscar el carrito utilizando el ID obtenido
+            const cart = await cartDao.getCartById(cartId);
+            
+            if (!cart) {
+                return res.status(404).json({ message: 'Carrito no encontrado' });
+            }
+
+            return res.status(200).json({ cart });
+        } catch (error) {
+            console.error('Error al obtener el carrito del usuario:', error);
+            return res.status(500).json({ message: 'Error al obtener el carrito del usuario.' });
         }
-
-        // Obtener el ID del carrito del usuario encontrado
-        const cartId = user.carrito;
-        console.log("Valor de user.carrito:", user.carrito);
-        if (!mongoose.Types.ObjectId.isValid(cartId)) {
-            return res.status(400).json({ message: 'ID de carrito no válido' });
-        }
-
-        // Buscar el carrito utilizando el ID obtenido
-        const cart = await cartDao.getCartById(cartId);
-        
-        if (!cart) {
-            return res.status(404).json({ message: 'Carrito no encontrado' });
-        }
-
-        return res.status(200).json({ cart });
-    } catch (error) {
-        console.error('Error al obtener el carrito del usuario:', error);
-        return res.status(500).json({ message: 'Error al obtener el carrito del usuario.' });
     }
-}
 
 
 // funcion para obtener todos los carritos
-async getAllCarts(req, res) {
-    
-    try {
-        // se guarda en la constante de nombre carts todos los carritos de la base de datos con la funcion getallcarts
-        const carts = await cartDao.getAllCarts(); 
-        // se aplica una condicional donde: si !NO se encuentran los carritos retorna un error y se corta la condicion con el mismo return 
-        if (!carts) {
-            return res.status(404).json({ message: "No se encontraron carritos" });
+    async getAllCarts(req, res) {
+        
+        try {
+            // se guarda en la constante de nombre carts todos los carritos de la base de datos con la funcion getallcarts
+            const carts = await cartDao.getAllCarts(); 
+            // se aplica una condicional donde: si !NO se encuentran los carritos retorna un error y se corta la condicion con el mismo return 
+            if (!carts) {
+                return res.status(404).json({ message: "No se encontraron carritos" });
+            }
+            // de lo contrario muestra todos los carritos
+            return res.json(carts);
+        } catch (error) {
+            //si nada funciona se muestra el error maximo
+            console.error(error);
+            return res.status(500).json({ status: "error", error: "tenemos un 33-12" });
         }
-        // de lo contrario muestra todos los carritos
-        return res.json(carts);
-    } catch (error) {
-        //si nada funciona se muestra el error maximo
-        console.error(error);
-        return res.status(500).json({ status: "error", error: "tenemos un 33-12" });
     }
-}
 
 //funcion para crear un carrito
-async createCart(req, res) {
-    try {
-        const newCart = req.body;
-        const cart = await cartDao.createCart(newCart);
-        if (!cart) {
-            return res.status(500).json({ message: "Error al crear el carrito" });
+    async createCart(req, res) {
+        try {
+            const newCart = req.body;
+            const cart = await cartDao.createCart(newCart);
+            if (!cart) {
+                return res.status(500).json({ message: "Error al crear el carrito" });
+            }
+            return res.json({ message: "Carrito creado", cart });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ status: "error", error: "tenemos un 33-12" });
         }
-        return res.json({ message: "Carrito creado", cart });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ status: "error", error: "tenemos un 33-12" });
     }
-}
 
 // funcion para añadir un producto especifico a un carrito especifico 
 
-async addProductsToCart(req, res) {
-    try {
-        const cartId = req.params.cid;
-        const products = req.body; // Espera un array de productos
+    async addProductsToCart(req, res) {
+        try {
+            const cartId = req.params.cid;
+            const products = req.body; // Espera un array de productos
 
-        // Verifica si products es un array y no está vacío
-        if (!Array.isArray(products) || products.length === 0) {
-            return res.status(400).json({ message: "Formato de productos no válido" });
-        }
-
-        // Verifica cada producto del array
-        for (const product of products) {
-            const { productId, quantity } = product;
-            if (quantity < 1) {
-                return res.status(400).json({ message: "La cantidad debe ser 1 o más" });
+            // Verifica si products es un array y no está vacío
+            if (!Array.isArray(products) || products.length === 0) {
+                return res.status(400).json({ message: "Formato de productos no válido" });
             }
-        }
 
-        // Llama a la función de DAO para agregar productos al carrito
-        const result = await cartDao.addProductsToCart(cartId, products);
-        return res.json(result);
+            // Verifica cada producto del array
+            for (const product of products) {
+                const { productId, quantity } = product;
+                if (quantity < 1) {
+                    return res.status(400).json({ message: "La cantidad debe ser 1 o más" });
+                }
+            }
+
+            // Llama a la función de DAO para agregar productos al carrito
+            const result = await cartDao.addProductsToCart(cartId, products);
+            return res.json(result);
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ status: "error", error: error.message });
+            }
+    }
+
+    async addProductToCart(req, res) {
+        try {
+            // en la logica se obtiene el id del carrito + id del producto especifico y se agrega el producto al carrito si todo funciona bien 
+            const cartId = req.params.cid;
+            const productIds = req.body.productIds;
+            const result = await cartDao.addProductToCart(cartId, productIds);
+            return res.json(result);
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ status: "error", error: error.message });
+            return res.status(500).json({ status: "error", error: "error" });
         }
-}
-
-async addProductToCart(req, res) {
-    try {
-        // en la logica se obtiene el id del carrito + id del producto especifico y se agrega el producto al carrito si todo funciona bien 
-        const cartId = req.params.cid;
-        const productIds = req.body.productIds;
-        const result = await cartDao.addProductToCart(cartId, productIds);
-        return res.json(result);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ status: "error", error: "error" });
     }
-}
 
 // contador (cantidad) de un producto en un carrito
-async updateProductQuantity(req, res) {
-    try {
-        const cartId = req.params.cid;
-        const productId = req.params.pid;
-        const newQuantity = req.body.quantity;
-        const result = await cartDao.updateProductQuantity(cartId, productId, newQuantity);
-        return res.json(result);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ status: "error", error: "error" });
+    async updateProductQuantity(req, res) {
+        try {
+            const cartId = req.params.cid;
+            const productId = req.params.pid;
+            const newQuantity = req.body.quantity;
+            const result = await cartDao.updateProductQuantity(cartId, productId, newQuantity);
+            return res.json(result);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ status: "error", error: "error" });
+        }
     }
-}
 
 // borrar un carrito especifico
-async deleteCartById(req, res) {
-    try {
-        const cartId = req.params.id;
-        const result = await cartDao.deleteCartById(cartId);
-        return res.json(result);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Algo salió mal al eliminar el carrito" });
+    async deleteCartById(req, res) {
+        try {
+            const cartId = req.params.id;
+            const result = await cartDao.deleteCartById(cartId);
+            return res.json(result);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Algo salió mal al eliminar el carrito" });
+        }
     }
-}
 
 // limpiar un carrito especifico segun id (del carrito)
-async deleteAllProductsInCart(req, res) {
-    try {
-        const cartId = req.params.cid;
-        const result = await cartDao.deleteAllProductsInCart(cartId);
-        return res.json(result);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Algo salió mal al eliminar los productos del carrito" });
+    async deleteAllProductsInCart(req, res) {
+        try {
+            const cartId = req.params.cid;
+            const result = await cartDao.deleteAllProductsInCart(cartId);
+            return res.json(result);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Algo salió mal al eliminar los productos del carrito" });
+        }
     }
-}
 
 // eliminar un producto especifico de un carrito especifico (id de carrito / id de producto)
-async deleteProductFromCart(req, res) {
-    try {
-        const cartId = req.params.cid;
-        const productId = req.params.pid;
-        const result = await cartDao.deleteProductFromCart(cartId, productId);
-        return res.json(result);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Algo salió mal al eliminar el producto del carrito" });
+    async deleteProductFromCart(req, res) {
+        try {
+            const cartId = req.params.cid;
+            const productId = req.params.pid;
+            const result = await cartDao.deleteProductFromCart(cartId, productId);
+            return res.json(result);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Algo salió mal al eliminar el producto del carrito" });
+        }
     }
-}
+/*************************** */
+//elimina producto del carrito
+// Define tu controlador para la eliminación de productos del carrito
+ async eliminarProductoDelCarrito(req, res){
+  const { cartId, productId } = req.params;
 
+  try {
+    // Llama al método removeProductFromCart del CartManager para eliminar el producto del carrito
+    const resultado = await CartManager.removeProductFromCart(cartId, productId);
+
+    // Maneja la respuesta según sea necesario
+    // Envía una respuesta al cliente, por ejemplo, un mensaje de éxito o redirige a una página específica
+    res.status(200).send('Producto eliminado del carrito exitosamente');
+  } catch (error) {
+    // Maneja cualquier error que pueda ocurrir
+    res.status(500).send('Ocurrió un error al intentar eliminar el producto del carrito');
+  }
+};
 // funcion para generar un codigo aleatorio-ojo
 async generateUniqueCode() {
     return uuidv4();

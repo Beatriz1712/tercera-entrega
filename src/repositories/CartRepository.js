@@ -80,7 +80,7 @@ class CartRepository {
       throw new Error("Error al crear carrito para el usuario");
     }
   }
-
+//borra todos los productos del carrito
   async deleteAllProductsInCart(cartId) {
     try {
       const result = await this.dao.deleteAllProductsInCart(cartId);
@@ -103,23 +103,23 @@ class CartRepository {
   }
   async addProductToUserCart(userId, productId, quantity) {
     try {
-      // Primero, intenta encontrar el carrito existente del usuario
-      let userCart = await cartsModel.findOne({ userId: userId });
+        // Primero, intenta encontrar el carrito existente del usuario
+        let userCart = await cartsModel.findOne({ userId: userId });
 
-      // Si no hay un carrito, crea uno nuevo
-      if (!userCart) {
-        userCart = new cartsModel({
-          userId: userId,
-          products: [],
-        });
+        // Si no hay un carrito, crea uno nuevo
+        if (!userCart) {
+          userCart = new cartsModel({
+            userId: userId,
+            products: [],
+          });
+          await userCart.save();
+        }
+
+        // Ahora, agrega el producto al carrito
+        userCart.products.push({ productId: productId, quantity: quantity });
         await userCart.save();
-      }
 
-      // Ahora, agrega el producto al carrito
-      userCart.products.push({ productId: productId, quantity: quantity });
-      await userCart.save();
-
-      return userCart;
+        return userCart;
     } catch (error) {
       throw new Error("Error al agregar el producto al carrito del usuario");
     }
