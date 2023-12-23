@@ -14,6 +14,10 @@ import userRouter from './router/user.routes.js';
 import messagesRouter from "./router/messages.routes.js"
 import Chance from 'chance';
 import mongoose from 'mongoose';
+import methodOverride from 'method-override';
+import handlebarsHelpers from "handlebars-helpers";
+
+
 
 //para aumentar los listeners
 import EventEmitter from "events";
@@ -25,7 +29,7 @@ dotenv.config();
 
 // Inicializar la aplicación de Express
 const app = express();
-
+app.use(methodOverride('_method'));
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
@@ -43,18 +47,25 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 //Rutas CRUD con Postman
+//const helpers = handlebarsHelpers();
 app.use("/api/carts", cartsRouter)
 app.use("/api/prod", productsRouter)
 app.use("/api/user", userRouter)
 app.use("/api/msg", messagesRouter)
+app.use("delete", cartsRouter)
 //handlebars
+const handlebarsHelpersInstance = handlebarsHelpers();
 app.engine("handlebars", engine({
+  helpers: {
+    ...handlebarsHelpersInstance
+  },
   runtimeOptions: {
       allowProtoPropertiesByDefault: true,
       allowProtoMethodsByDefault: true,
   }
 }));
 app.set("view engine", "handlebars")
+
 app.set("views", path.resolve(__dirname + "/views"))
 /******* */
 
@@ -79,8 +90,6 @@ app.get('/mockingproducts', (req, res) => {
 
   res.render('faker', { products: mockProducts });
 });
-
-
 
 //Css static
 app.use("/", express.static(__dirname + "/public"))

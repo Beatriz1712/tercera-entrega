@@ -253,4 +253,23 @@ async calculateTotal(cartProducts) {
 
 export default CartController;
 
+/*******************
+ * console.log('Guardando el nuevo ticket en la base de datos');
+const savedTicket = await newTicket.save();
+console.log('Ticket guardado con éxito:', savedTicket);
+//
+Para monitorear los registros (logs) de tu aplicación y verificar si se están produciendo errores o si el ticket se está generando como se espera, puedes colocar logs en las secciones críticas de tu código. Por ejemplo, puedes agregar logs después de operaciones importantes como guardar un nuevo ticket en la base de datos o al obtener el correo electrónico del usuario.
 
+Para agregar logs, puedes usar console.log('mensaje') para imprimir mensajes en la consola. Por ejemplo:
+
+javascript
+Copiar
+console.log('Guardando el nuevo ticket en la base de datos');
+const savedTicket = await newTicket.save();
+console.log('Ticket guardado con éxito:', savedTicket);
+Además, puedes utilizar console.error('mensaje') para imprimir mensajes de error en la consola en caso de excepciones o errores inesperados.
+
+Responder de nuevo
+Buscar en la web y GPT-4
+
+ */

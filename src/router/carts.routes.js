@@ -112,6 +112,8 @@ router.put("/:cid/products/:pid", async (req, res) => {
 // Eliminar productos de un carrito
 
 router.delete("/cart/:cid/products/:pid", async (req, res) => {
+  console.log('entro a delete');
+  console.log(req.params);
   let cartId = req.params.cid; //
   let productId = req.params.pid; //
   try {

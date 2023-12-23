@@ -8,7 +8,8 @@ const ticketSchema = new mongoose.Schema(
     purchaser: { type: String, max: 30, required: true },
     amount: { type: Number },
     purchase_datetime: { type: Date, default: Date.now },
-    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "products" }] // Campo para la fecha de compra
+    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "products" }], // Campo para la fecha de compra
+    cart: { type:mongoose.Schema.Types.ObjectId, ref:"cart" }
   },
   { timestamps: true } // Usar timestamps para createdAt y updatedAt mongoose manejara automaticamente la creacion y actualizacion del ticket
 );

@@ -1,5 +1,6 @@
 
 <h1>Productos en el carrito</h1>
+<!--<pre>{{json cart}}</pre>-->
 
 {{#if cart.products}}
   <p>Hay {{cart.products.length}} productos en el carrito.</p>
@@ -9,10 +10,9 @@
         Producto ID: {{this.productId}}, Cantidad: {{this.quantity}}
         <br>
         <!-- <form action="/cart/products/{{this.productId}}" method="POST">-->
-          <form action="/cart/{{cartId}}/products/{{this.productId}}" method="POST">
+          <form action="/delete/cart/{{../cartId}}/products/{{this.productId}}" method="POST">
             <input type="hidden" name="_method" value="DELETE">
             <button type="submit">Eliminar</button>
-        
           </form>
           <p id="deleteAlert" style="color:red; display:none"> PRODUCTO ELIMINADO</p>"
       </li>
@@ -27,4 +27,4 @@
 {{/if}}
 
 <a href="/products"><h3>Volver a todos los productos</h3></a>
-<script src="/cart.js"></script>
+<script src="/js/delete.js"></script>

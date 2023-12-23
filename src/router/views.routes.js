@@ -84,13 +84,14 @@ router.get("/cart", async (req, res) => {
         return res.redirect("/login"); // Redirigir a la página de inicio de sesión, por ejemplo
     }
     try {
-        //console.log(req.user._id)  
+        console.log(req.user)  
         const userId = req.user._id;
         //console.log(userId)
         let userCart = await repocart.getCartById(userId); 
-        
+        let cartId = userCart._id
         console.log(userCart)     // Función para obtener el carrito del usuario
-
+        console.log('el id user : ', userId);
+        console.log('el Id cart : ', cartId);
         res.render("cart", {
             title: "Vista Carro",
             cart: userCart // Pasar el carrito específico del usuario a la plantilla
