@@ -3,9 +3,10 @@ fetch("/getCartId")
   .then((response) => response.json())
   .then((data) => {
     const cartId = data.cartId;
-    // Utiliza cartId en las solicitudes posteriores, por ejemplo:
+    
+    // Utiliza cartId en las solicitudes posteriores
     fetch(`/cart/${cartId}/products`, {
-      method: "POST",
+      method: "POST",  
       // Resto de la configuración de la solicitud
     });
   });

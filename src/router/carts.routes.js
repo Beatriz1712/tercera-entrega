@@ -15,13 +15,15 @@ const cartController = new CartController()
 //obtener todos los carritos
 router.get("/", async (req, res) => {
     try {
+     
+    
       const carts = await cartManager.getAllCarts();
       res.send({ result: "success", payload: carts });
     } catch (error) {
       console.log(error);
       res.status(500).send({ status: "error", error: "Error al obtener carritos" });
     }
-  });
+  });  
 
 // Crear un nuevo carrito
 router.post("/", async (req, res) => {
@@ -62,7 +64,9 @@ router.delete("/:id", async (req, res) => {
 
 // PRODUCTOS DENTRO DE CARRITO
 // Verificar si un producto está en el carrito
-router.get("/:cid/products/:pid", async (req, res) => {
+router.get("/cart/:cid/products/:pid", async (req, res) => {  
+    console.log('entro a get')
+    console.log(req.params)
     const cartId = req.params.cid;  // Obtener cartId de los parámetros de la URL
     const prodId = req.params.pid;  // Obtener prodId de los parámetros de la URL
   
@@ -111,15 +115,15 @@ router.put("/:cid/products/:pid", async (req, res) => {
 
 // Eliminar productos de un carrito
 
-router.delete("/cart/:cid/products/:pid", async (req, res) => {
-  console.log('entro a delete');
-  console.log(req.params);
-  let cartId = req.params.cid; //
+router.post("/cart/:cid/products/:pid", async (req, res) => {  
+  console.log('entro a delete')  
+  console.log(req.params)    
+  let cartId = req.params.cid; //   
   let productId = req.params.pid; //
   try {
     const result = await cartManager.removeProductFromCart(cartId, productId);
-
-    res.send({ result: "success", payload: result });
+    res.redirect("/cart")
+    //res.send({ result: "success", payload: result });  
   } catch (error) {
     console.error("Error al eliminar productos del carrito:", error);
     res
@@ -183,4 +187,4 @@ router.delete("/api/deleteproductcarts/:cid", cartController.deleteAllProductsIn
 router.get("/api/carts/:cid/purchase", passport.authenticate('current', { session: false }), isAuthenticated, cartController.purchaseProducts); 
 // realizar la compra total de los productos del carrito
 
-export default router;
+export default router; 

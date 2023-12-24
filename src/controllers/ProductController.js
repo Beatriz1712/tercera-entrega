@@ -32,8 +32,7 @@ const ProductController = {
       const productData = req.body;
       const result = await productManager.addProducts(productData);
 
-      //res.status(201).json({ message: 'Producto agregado correctamente', product: result });
-      //renderizado de producto agregado a la base de datos
+       //renderizado de producto agregado a la base de datos
       res.render('productAdded', { title: result.title, price: result.price });
     } catch (error) {
       res.status(500).json({ error: error.message || 'Error al agregar el producto' });
@@ -62,6 +61,8 @@ const ProductController = {
       const result = await productManager.deleteProducts(productId);
 
       if (result) {
+        //redirigir al carrito despues de eliminar el producto
+        res.redirect('/cart')
         res.json({ message: 'Producto eliminado correctamente', product: result });
       } else {
         res.status(404).json({ error: 'Producto no encontrado' });

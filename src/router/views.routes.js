@@ -6,14 +6,14 @@ import CartManager from "../controllers/CartManager.js"
 import { isAdmin } from "../config/middlewares.js";
 
 const product = new ProductManager
-const cart = new CartManager
+const cart = new CartManager  
 const repocart = new CartRepository
 //Pagina inicial
 router.get("/", (req, res)=> {
     res.render("home", {
         title: "Ecommerce App Backend"
     })
-})
+})  
 
 
 // Middleware para verificar la autenticación del usuario
@@ -84,24 +84,25 @@ router.get("/cart", async (req, res) => {
         return res.redirect("/login"); // Redirigir a la página de inicio de sesión, por ejemplo
     }
     try {
-        console.log(req.user)  
-        const userId = req.user._id;
-        //console.log(userId)
+        console.log(req.user) 
+        //console.log(req.user._id)    
+        const userId = req.user._id; // Asumiendo que puedes obtener el ID del usuario de la sesión    
         let userCart = await repocart.getCartById(userId); 
         let cartId = userCart._id
-        console.log(userCart)     // Función para obtener el carrito del usuario
-        console.log('el id user : ', userId);
-        console.log('el Id cart : ', cartId);
+        console.log('el id user :',userId)
+        console.log('el id cart :',cartId)  
         res.render("cart", {
             title: "Vista Carro",
-            cart: userCart // Pasar el carrito específico del usuario a la plantilla
+            cart: userCart ,
+            cartId: cartId,// Pasar el carrito específico del usuario a la plantilla
+            message: "producto eliminado"
         });
     } catch (error) {
         console.error("Error al obtener el carrito:", error);
         // Manejar el error, por ejemplo, mostrando un mensaje de error
     }
 });
-
+    
 //Login
 router.get("/login", async (req, res) => {
     res.render("login", {

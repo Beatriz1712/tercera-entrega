@@ -1,21 +1,27 @@
+
+// delete 
 document.querySelectorAll('.delete-product-btn').forEach(button => {
-    button.addEventListener('click',function(e){
+    button.addEventListener('click', function(e) {
         e.preventDefault();
         const cartId = this.dataset.cartid;
-        const productId = this.dataset.productId;
-        fetch(`/cart/${cartId}/products/${productId}`,{
-            method: `DELETE`
+        const productId = this.dataset.productid;
+
+        fetch(`/cart/${cartId}/products/${productId}`, {
+            method: 'DELETE'
         }).then(response => {
-            if (response.ok){
-                //elimina el elmento del DOM o recargar la pagina
-                console.log("\u001b[1;35mProducto eliminado");
+            if (response.ok) {
+              console.log("Producto eliminado");
+              // Redirigir al carrito después de eliminar el producto
+              window.location.href = "/cart"; // Reemplaza '/cart' con la URL real de tu página del carrito
+              // Lógica para eliminar el elemento del DOM o recargar la página
+              alert("Producto eliminado");
+              
             } else {
-                //manejo deerrores
+                // Manejar errores
                 console.error('Error al eliminar el producto');
             }
         }).catch(error => {
-            console.error('Error', error);
-        })
-        })
-    })
-
+            console.error('Error:', error);
+        });
+    });
+});

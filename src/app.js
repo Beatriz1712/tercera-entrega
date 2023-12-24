@@ -13,12 +13,9 @@ import productsRouter from './router/product.routes.js';
 import userRouter from './router/user.routes.js';
 import messagesRouter from "./router/messages.routes.js"
 import Chance from 'chance';
+import Handlebars from 'handlebars';
 import mongoose from 'mongoose';
 import methodOverride from 'method-override';
-import handlebarsHelpers from "handlebars-helpers";
-
-
-
 //para aumentar los listeners
 import EventEmitter from "events";
 EventEmitter.defaultMaxListeners = 15;
@@ -28,6 +25,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Inicializar la aplicación de Express
+
 const app = express();
 app.use(methodOverride('_method'));
 app.use(express.json())
@@ -39,6 +37,7 @@ connectDB();
 // Configuración de la sesión
 app.use(session(sessionConfig));
 
+
 // ---------------------------------------------
 
 //Passport
@@ -47,26 +46,25 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 //Rutas CRUD con Postman
-//const helpers = handlebarsHelpers();
 app.use("/api/carts", cartsRouter)
 app.use("/api/prod", productsRouter)
 app.use("/api/user", userRouter)
 app.use("/api/msg", messagesRouter)
-app.use("delete", cartsRouter)
+app.use("/delete", cartsRouter)
 //handlebars
-const handlebarsHelpersInstance = handlebarsHelpers();
 app.engine("handlebars", engine({
-  helpers: {
-    ...handlebarsHelpersInstance
-  },
   runtimeOptions: {
       allowProtoPropertiesByDefault: true,
       allowProtoMethodsByDefault: true,
   }
 }));
 app.set("view engine", "handlebars")
-
 app.set("views", path.resolve(__dirname + "/views"))
+// Asumiendo que Handlebars ya ha sido importado o requerido anteriormente
+Handlebars.registerHelper('json', function(context) {
+  return JSON.stringify(context);
+});
+
 /******* */
 
 
@@ -91,9 +89,11 @@ app.get('/mockingproducts', (req, res) => {
   res.render('faker', { products: mockProducts });
 });
 
+
+ 
 //Css static
 app.use("/", express.static(__dirname + "/public"))
-/******* */
+/******* */  
 //app.use(express.static("public"));
 
 //URLs al Front  

@@ -51,7 +51,7 @@ class CartDao {
     fs.writeFileSync(cartsFilePath, JSON.stringify(carts, null, 2), "utf-8");
   }
 
-  /******Elimina productos del carrito ******/
+  /******Elimina productos del carrito */
   static deleteProductFromCart(cartId, productId) {
     const carts = this.getAllCarts();
     const cart = carts.find((cart) => cart.id === cartId);
